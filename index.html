@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TASTE ARCHIVE // EDITORIAL CURATION GALLERY</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            paper: '#F4F0EA',
+            charcoal: '#1A1918',
+            sienna: '#A84227',
+            olive: '#4A503D',
+            rust: '#C2593F',
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'serif'],
+            mono: ['"Space Grotesk"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Global Base */
+    body {
+      background-color: #F4F0EA;
+      color: #1A1918;
+      font-family: 'Space Grotesk', sans-serif;
+      cursor: crosshair;
+    }
+
+    /* Grain Overlay via SVG noise generator */
+    .grain-overlay {
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.18'/%3E%3C/svg%3E");
+    }
+
+    /* Tactile Brutalist Offset Shadow Interactivity */
+    .editorial-card {
+      border: 1px solid #1A1918;
+      border-radius: 0px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .editorial-card:hover {
+      transform: translate(-4px, -4px);
+      box-shadow: 4px 4px 0px #1A1918;
+    }
+
+    /* Double Line Hairline Separators */
+    .double-rule {
+      border-top: 1px solid #1A1918;
+      border-bottom: 1px solid #1A1918;
+      height: 4px;
+    }
+
+    /* Manifesto Drop Cap */
+    .drop-cap::first-letter {
+      font-family: 'Playfair Display', serif;
+      float: left;
+      font-size: 4rem;
+      line-height: 0.75;
+      padding-top: 4px;
+      padding-right: 12px;
+      color: #A84227;
+      font-weight: 800;
+    }
+  </style>
+</head>
+<body class="min-h-screen antialiased selection:bg-sienna selection:text-paper">
+
+  <header class="max-w-7xl mx-auto px-6 pt-12 pb-6">
+    <div class="flex flex-col md:flex-row justify-between items-baseline border-b-2 border-charcoal pb-4 mb-8">
+      <div>
+        <span class="text-xs font-bold tracking-widest uppercase text-sienna block mb-1">// HCAI CURATION GALLERY</span>
+        <h1 class="font-serif text-5xl md:text-7xl font-black uppercase tracking-tight">
+          Taste <span class="italic font-normal text-sienna">Archive</span>
+        </h1>
+      </div>
+      <div class="text-xs font-bold tracking-widest uppercase mt-4 md:mt-0 border border-charcoal px-3 py-1">
+        VOL. IV // VINTAGE EDITORIAL
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start pb-8 border-b border-charcoal">
+      <div class="md:col-span-4">
+        <span class="text-xs font-bold tracking-widest uppercase text-olive block mb-2">// STATEMENT OF INTENT</span>
+        <h2 class="font-serif text-2xl md:text-3xl font-bold leading-tight">
+          A deliberate stand against derivative digital artifacts.
+        </h2>
+      </div>
+      <div class="md:col-span-8 text-sm leading-relaxed text-charcoal/90 drop-cap">
+        This archive documents tangible physical and typographic landmarks that reject standard digital defaults. We explicitly bypass modern "AI slop" UI design tropes—refusing soft rounded corner cards, drop shadows, and low-contrast palettes in favor of strict grid architectures, tactile high-chroma print accents, hairline rules, and structural longevity. Every piece preserved below has been subjected to a rigorous taste filter evaluating physical materiality, structural honesty, and timeless aesthetic clarity.
+      </div>
+    </div>
+  </header>
+
+  <section class="max-w-7xl mx-auto px-6 mb-12">
+    <div class="border-y-2 border-charcoal py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div class="text-xs font-bold tracking-widest uppercase text-charcoal/70">
+        [INDEX FILTER] // MULTI-SELECT CATEGORIES:
+      </div>
+      <div id="filter-bar" class="flex flex-wrap gap-3">
+        </div>
+    </div>
+  </section>
+
+  <main class="max-w-7xl mx-auto px-6 pb-24">
+    <div id="gallery-grid" class="grid grid-cols-1 md:grid-cols-12 gap-8">
+      </div>
+  </main>
+
+  <div id="modal-overlay" class="fixed inset-0 bg-charcoal/50 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4 md:p-8">
+    <div class="bg-paper border-2 border-charcoal w-full max-w-5xl max-h-[90vh] overflow-y-auto relative shadow-[8px_8px_0px_#1A1918] p-6 md:p-10">
+      
+      <button id="modal-close-btn" class="absolute top-6 right-6 border border-charcoal bg-paper px-3 py-1.5 text-xs font-bold tracking-widest uppercase editorial-card">
+        [ CLOSE ✕ ]
+      </button>
+
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 mt-6">
+        <div class="md:col-span-6 border border-charcoal relative min-h-[320px] bg-charcoal/5">
+          <div class="absolute inset-0 grain-overlay pointer-events-none z-10"></div>
+          <img id="modal-img" src="" alt="" class="w-full h-full object-cover grayscale contrast-125 block" />
+        </div>
+
+        <div class="md:col-span-6 flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-center border-b border-charcoal pb-2 mb-4">
+              <span id="modal-archive-id" class="text-xs font-bold tracking-widest uppercase text-sienna"></span>
+              <span id="modal-category" class="text-xs font-bold tracking-widest uppercase border border-charcoal px-2 py-0.5"></span>
+            </div>
+
+            <h3 id="modal-title" class="font-serif text-3xl md:text-4xl font-bold mb-4 leading-tight"></h3>
+            
+            <div class="border-l-2 border-sienna pl-4 mb-6 italic text-sm text-charcoal/90" id="modal-summary"></div>
+
+            <div class="mb-6">
+              <span class="text-xs font-bold tracking-widest uppercase block text-olive mb-1">// TASTE VERDICT & REASONING</span>
+              <p id="modal-critique" class="text-sm leading-relaxed text-charcoal/90"></p>
+            </div>
+          </div>
+
+          <div class="border-t border-charcoal pt-4">
+            <span class="text-xs font-bold tracking-widest uppercase text-charcoal/60 block mb-2">// CATALOG TAGS</span>
+            <div id="modal-tags" class="flex flex-wrap gap-2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- SAMPLE ITEMS DATABASE (6 ITEMS ACROSS THEMES) ---
+    const galleryItems = [
+      {
+        id: "01",
+        archiveId: "FIG. 01 // ARCHIVE 1974",
+        title: "Braun ET66 Control Calculator",
+        category: "INDUSTRIAL",
+        colSpan: "md:col-span-7",
+        aspectRatio: "aspect-[4/3]",
+        image: "https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?auto=format&fit=crop&w=1000&q=80",
+        summary: "Dietrich Lubs & Dieter Rams' masterclass in functional ergonomics.",
+        critique: "Passed filter due to absolute tactile restraint. The deliberate use of convex spherical buttons and singular high-chroma yellow keying creates immediate cognitive legibility without ornamental fluff.",
+        tags: ["DIETER RAMS", "GERMAN MODERNISM", "ABS PLASTIC"]
+      },
+      {
+        id: "02",
+        archiveId: "FIG. 02 // ARCHIVE 1968",
+        title: "Olivetti Valentine Portable Typewriter",
+        category: "INDUSTRIAL",
+        colSpan: "md:col-span-5",
+        aspectRatio: "aspect-square",
+        image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1000&q=80",
+        summary: "Ettore Sottsass transforming corporate tools into cultural statements.",
+        critique: "Passed filter for radical color positioning. Sottsass used glossy bright red plastic to subvert utilitarian office machinery, creating an expressive anti-corporate design icon.",
+        tags: ["SOTTSASS", "ITALIAN DESIGN", "POP-ART"]
+      },
+      {
+        id: "03",
+        archiveId: "FIG. 03 // ARCHIVE 1957",
+        title: "Neue Haas Grotesk Type Specimen",
+        category: "TYPOGRAPHY",
+        colSpan: "md:col-span-4",
+        aspectRatio: "aspect-square",
+        image: "https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=1000&q=80",
+        summary: "Max Miedinger's foundational Swiss grotesque foundry specimen.",
+        critique: "Passed filter for uncompromising mathematical clarity. Designed specifically to act as an unopinionated frame for language rather than expressing arbitrary artistic flair.",
+        tags: ["SWISS STYLE", "FOUNDRY", "GROTESK"]
+      },
+      {
+        id: "04",
+        archiveId: "FIG. 04 // ARCHIVE 1928",
+        title: "Breuer Model B3 Wassily Chair",
+        category: "ARCHITECTURE",
+        colSpan: "md:col-span-8",
+        aspectRatio: "aspect-[16/9]",
+        image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1000&q=80",
+        summary: "Seamless bent tubular steel framing inspired by bicycle frames.",
+        critique: "Passed filter for structural reduction. Marcel Breuer dematerialized the traditional heavy armchair into simple suspended planes of leather and cold-drawn steel geometry.",
+        tags: ["BAUHAUS", "TUBULAR STEEL", "STRUCTURAL"]
+      },
+      {
+        id: "05",
+        archiveId: "FIG. 05 // ARCHIVE 1960",
+        title: "Akari 1A Light Sculpture",
+        category: "INDUSTRIAL",
+        colSpan: "md:col-span-5",
+        aspectRatio: "aspect-square",
+        image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=1000&q=80",
+        summary: "Isamu Noguchi's hand-made shoji paper lantern illumination.",
+        critique: "Passed filter for material authenticity. Noguchi balanced delicate mulberry bark paper with raw bamboo ribbing to transform harsh electric light into warm organic atmospheric weight.",
+        tags: ["NOGUCHI", "WASHI PAPER", "ORGANIC"]
+      },
+      {
+        id: "06",
+        archiveId: "FIG. 06 // ARCHIVE 1972",
+        title: "Vignelli NYC Subway Map System",
+        category: "TYPOGRAPHY",
+        colSpan: "md:col-span-7",
+        aspectRatio: "aspect-[4/3]",
+        image: "https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=1000&q=80",
+        summary: "Massimo Vignelli's legendary diagrammatic transit chart.",
+        critique: "Passed filter for radical abstract problem solving. Vignelli discarded geographical accuracy in favor of a clean, color-coded 45 and 90-degree typographic grid diagram.",
+        tags: ["VIGNELLI", "INFORMATION DESIGN", "SYSTEMS"]
+      }
+    ];
+
+    const categories = ["ALL", "INDUSTRIAL", "TYPOGRAPHY", "ARCHITECTURE"];
+    let activeFilters = new Set(["ALL"]);
+
+    // --- MULTI-SELECT FILTERING LOGIC ---
+    const filterBar = document.getElementById('filter-bar');
+
+    function renderFilters() {
+      filterBar.innerHTML = '';
+      categories.forEach((cat, idx) => {
+        const isActive = activeFilters.has(cat);
+        const btn = document.createElement('button');
+        btn.className = `px-3 py-1 text-xs font-bold tracking-widest uppercase border border-charcoal editorial-card transition-colors ${
+          isActive ? 'bg-sienna text-paper' : 'bg-paper text-charcoal'
+        }`;
+        btn.innerText = `[0${idx + 1}] ${cat}`;
+        btn.onclick = () => handleFilterClick(cat);
+        filterBar.appendChild(btn);
+      });
+    }
+
+    function handleFilterClick(cat) {
+      if (cat === "ALL") {
+        activeFilters.clear();
+        activeFilters.add("ALL");
+      } else {
+        activeFilters.delete("ALL");
+        if (activeFilters.has(cat)) {
+          activeFilters.delete(cat);
+        } else {
+          activeFilters.add(cat);
+        }
+        if (activeFilters.size === 0) {
+          activeFilters.add("ALL");
+        }
+      }
+      renderFilters();
+      renderGallery();
+    }
+
+    // --- GALLERY GRID RENDERING LOGIC ---
+    const galleryGrid = document.getElementById('gallery-grid');
+
+    function renderGallery() {
+      galleryGrid.innerHTML = '';
+
+      const filteredItems = galleryItems.filter(item => 
+        activeFilters.has("ALL") || activeFilters.has(item.category)
+      );
+
+      filteredItems.forEach(item => {
+        const card = document.createElement('article');
+        card.className = `${item.colSpan} border border-charcoal bg-paper p-5 editorial-card cursor-pointer flex flex-col justify-between`;
+        card.onclick = () => openModal(item);
+
+        card.innerHTML = `
+          <div>
+            <div class="flex justify-between items-center border-b border-charcoal pb-2 mb-3 text-xs tracking-widest uppercase">
+              <span class="text-sienna font-bold">${item.archiveId}</span>
+              <span class="border border-charcoal px-2 py-0.5 font-bold">${item.category}</span>
+            </div>
+
+            <div class="relative overflow-hidden border border-charcoal mb-4 ${item.aspectRatio} bg-charcoal/5">
+              <div class="absolute inset-0 grain-overlay pointer-events-none z-10"></div>
+              <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover grayscale contrast-125 transition-transform duration-500 hover:scale-105" />
+            </div>
+
+            <h3 class="font-serif text-2xl font-bold mb-2 leading-snug">${item.title}</h3>
+            <p class="text-xs leading-relaxed text-charcoal/80 mb-4">${item.summary}</p>
+          </div>
+
+          <div class="border-t border-charcoal pt-3 flex justify-between items-center text-xs font-bold tracking-widest uppercase">
+            <span class="text-olive">// READ TASTE VERDICT</span>
+            <span>[ + ]</span>
+          </div>
+        `;
+
+        galleryGrid.appendChild(card);
+      });
+    }
+
+    // --- MODAL EXPANDER LOGIC ---
+    const modalOverlay = document.getElementById('modal-overlay');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+
+    function openModal(item) {
+      document.getElementById('modal-img').src = item.image;
+      document.getElementById('modal-archive-id').innerText = item.archiveId;
+      document.getElementById('modal-category').innerText = item.category;
+      document.getElementById('modal-title').innerText = item.title;
+      document.getElementById('modal-summary').innerText = `"${item.summary}"`;
+      document.getElementById('modal-critique').innerText = item.critique;
+
+      const tagsContainer = document.getElementById('modal-tags');
+      tagsContainer.innerHTML = '';
+      item.tags.forEach(tag => {
+        const tagSpan = document.createElement('span');
+        tagSpan.className = 'text-[10px] font-bold tracking-widest uppercase border border-charcoal px-2 py-1 bg-charcoal/5';
+        tagSpan.innerText = `#${tag}`;
+        tagsContainer.appendChild(tagSpan);
+      });
+
+      modalOverlay.classList.remove('hidden');
+    }
+
+    modalCloseBtn.onclick = () => modalOverlay.classList.add('hidden');
+    modalOverlay.onclick = (e) => {
+      if (e.target === modalOverlay) modalOverlay.classList.add('hidden');
+    };
+
+    // --- INITIALIZE SYSTEM ---
+    renderFilters();
+    renderGallery();
+  </script>
+</body>
+</html>
